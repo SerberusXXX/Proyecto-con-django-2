@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block title %}Nueva reserva{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="mb-4">
+            <h1 class="h3 mb-1">Registrar reserva</h1>
+            {% if recurso %}
+                <p class="text-muted mb-0">Estas reservando {{ recurso.nombre }}. El sistema validara disponibilidad antes de guardar.</p>
+            {% else %}
+                <p class="text-muted mb-0">El sistema validara que el recurso este disponible en el horario seleccionado.</p>
+            {% endif %}
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <div class="d-flex justify-content-end gap-2">
+                        <a class="btn btn-outline-secondary" href="{% url 'index' %}">Cancelar</a>
+                        <button class="btn btn-primary" type="submit">Guardar reserva</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
