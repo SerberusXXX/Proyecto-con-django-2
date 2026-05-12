@@ -1,0 +1,4 @@
+Django==6.0.4
+django-bootstrap5==26.2
+python-dotenv==1.0.1
+psycopg[binary]==3.3.2
