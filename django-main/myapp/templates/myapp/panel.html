@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block title %}Mi panel{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+        <span class="badge text-bg-dark mb-2">Entorno privado</span>
+        <h1 class="h3 mb-1">Mis reservas</h1>
+        <p class="text-muted mb-0">Aqui puedes consultar y cancelar las reservas creadas con tu cuenta.</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'crear_reserva' %}">Crear reserva</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <span class="text-muted small">Activas</span>
+                <div class="display-6 fw-semibold">{{ resumen.activas }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <span class="text-muted small">Para hoy</span>
+                <div class="display-6 fw-semibold">{{ resumen.hoy }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <span class="text-muted small">Canceladas</span>
+                <div class="display-6 fw-semibold">{{ resumen.canceladas }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form class="row g-3 align-items-end" method="get">
+            <div class="col-md-4">
+                {% bootstrap_field consulta_form.fecha %}
+            </div>
+            <div class="col-md-auto">
+                <button class="btn btn-dark" type="submit">Consultar</button>
+                <a class="btn btn-outline-secondary" href="{% url 'panel' %}">Limpiar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Recurso</th>
+                    <th>Fecha</th>
+                    <th>Horario</th>
+                    <th>Responsable</th>
+                    <th>Estado</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reserva in reservas %}
+                    <tr>
+                        <td>{{ reserva.recurso.nombre }}</td>
+                        <td>{{ reserva.fecha }}</td>
+                        <td>{{ reserva.hora_inicio|time:"H:i" }} - {{ reserva.hora_fin|time:"H:i" }}</td>
+                        <td>
+                            <div class="fw-semibold">{{ reserva.responsable }}</div>
+                            <span class="text-muted small">{{ reserva.correo }}</span>
+                        </td>
+                        <td>
+                            {% if reserva.esta_cancelada %}
+                                <span class="badge text-bg-secondary">Cancelada</span>
+                            {% else %}
+                                <span class="badge text-bg-success">Activa</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            {% if reserva.esta_cancelada %}
+                                <span class="text-muted small">Sin acciones</span>
+                            {% else %}
+                                <a class="btn btn-outline-danger btn-sm" href="{% url 'cancelar_reserva' reserva.id %}">Cancelar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td class="text-center text-muted py-4" colspan="6">Todavia no tienes reservas para esta consulta.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

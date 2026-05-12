@@ -1,0 +1,30 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: reservas_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    container_name: django_ecci_web
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    command: python manage.py runserver 0.0.0.0:9000
+
+volumes:
+  postgres_data:
