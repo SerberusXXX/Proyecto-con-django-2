@@ -16,9 +16,10 @@
             </button>
             <div class="collapse navbar-collapse" id="mainMenu">
                 <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
-                    <a class="nav-link" href="{% url 'index' %}">Recursos</a>
+                    <a class="nav-link" href="{% url 'index' %}">Modulo publico</a>
                     {% if user.is_authenticated %}
-                        <a class="nav-link" href="{% url 'panel' %}">Mi panel</a>
+                        <a class="nav-link" href="{% url 'panel' %}">Privado 1: reservas</a>
+                        <a class="nav-link" href="{% url 'agenda_privada' %}">Privado 2: agenda</a>
                         <a class="btn btn-primary btn-sm" href="{% url 'crear_reserva' %}">Nueva reserva</a>
                         <form action="{% url 'logout' %}" method="post" class="d-inline">
                             {% csrf_token %}

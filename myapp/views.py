@@ -120,6 +120,36 @@ def panel(request):
 
 
 @login_required
+def agenda_privada(request):
+    consulta_form = ConsultaFechaForm(request.GET or None)
+    fecha_consulta = timezone.localdate()
+
+    if consulta_form.is_valid() and consulta_form.cleaned_data.get("fecha"):
+        fecha_consulta = consulta_form.cleaned_data["fecha"]
+
+    recursos = Recurso.objects.filter(activo=True).prefetch_related("reservas")
+    agenda = [
+        {
+            "recurso": recurso,
+            "reservas": recurso.reservas.filter(
+                fecha=fecha_consulta, estado=Reserva.ACTIVA
+            ).order_by("hora_inicio"),
+        }
+        for recurso in recursos
+    ]
+
+    return render(
+        request,
+        "myapp/agenda_privada.html",
+        {
+            "agenda": agenda,
+            "consulta_form": consulta_form,
+            "fecha_consulta": fecha_consulta,
+        },
+    )
+
+
+@login_required
 def crear_reserva(request, recurso_id=None):
     recurso = None
     if recurso_id:

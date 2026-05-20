@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block title %}Agenda privada{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+        <span class="badge text-bg-dark mb-2">Modulo privado 2</span>
+        <h1 class="h3 mb-1">Agenda interna de recursos</h1>
+        <p class="text-muted mb-0">Consulta la ocupacion activa de todos los salones, auditorios, laboratorios y equipos.</p>
+    </div>
+    <a class="btn btn-primary" href="{% url 'crear_reserva' %}">Crear reserva</a>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form class="row g-3 align-items-end" method="get">
+            <div class="col-md-4">
+                {% bootstrap_field consulta_form.fecha %}
+            </div>
+            <div class="col-md-auto">
+                <button class="btn btn-dark" type="submit">Consultar agenda</button>
+                <a class="btn btn-outline-secondary" href="{% url 'agenda_privada' %}">Hoy</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row g-3">
+    {% for item in agenda %}
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between gap-3 mb-3">
+                        <div>
+                            <span class="badge text-bg-secondary mb-2">{{ item.recurso.get_tipo_display }}</span>
+                            <h2 class="h5 mb-1">{{ item.recurso.nombre }}</h2>
+                            <p class="text-muted mb-0">{{ item.recurso.ubicacion }}</p>
+                        </div>
+                        <span class="text-muted small text-nowrap">{{ fecha_consulta }}</span>
+                    </div>
+
+                    {% if item.reservas %}
+                        <div class="list-group list-group-flush">
+                            {% for reserva in item.reservas %}
+                                <div class="list-group-item px-0">
+                                    <div class="d-flex justify-content-between gap-3">
+                                        <strong>{{ reserva.hora_inicio|time:"H:i" }} - {{ reserva.hora_fin|time:"H:i" }}</strong>
+                                        <span class="badge text-bg-success">Activa</span>
+                                    </div>
+                                    <div class="text-muted small">
+                                        {{ reserva.responsable }} - {{ reserva.correo }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="border rounded p-3 bg-light text-muted">
+                            Sin reservas activas para esta fecha.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

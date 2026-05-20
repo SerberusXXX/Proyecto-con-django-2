@@ -113,6 +113,21 @@ class ReservaViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn("/accounts/login/", response["Location"])
 
+    def test_agenda_privada_requiere_login(self):
+        response = self.client.get(reverse("agenda_privada"))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/accounts/login/", response["Location"])
+
+    def test_agenda_privada_carga_con_usuario_autenticado(self):
+        self.client.login(username="laura", password="ClaveSegura123")
+
+        response = self.client.get(reverse("agenda_privada"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Modulo privado 2")
+        self.assertContains(response, "Agenda interna de recursos")
+
     def test_cancelar_reserva_cambia_estado(self):
         self.client.login(username="laura", password="ClaveSegura123")
         reserva = Reserva.objects.create(

@@ -1,6 +1,6 @@
 # Reserva ECCI
 
-Sistema de reservas tipo catalogo para consultar salones, auditorios, laboratorios y equipos disponibles. El entorno publico permite explorar recursos y disponibilidad. Para crear o cancelar reservas, el usuario debe iniciar sesion.
+Sistema de reservas tipo catalogo para consultar salones, auditorios, laboratorios y equipos disponibles. El proyecto esta separado en 1 modulo publico y 2 modulos privados protegidos por inicio de sesion.
 
 ## Funcionalidades
 
@@ -8,7 +8,8 @@ Sistema de reservas tipo catalogo para consultar salones, auditorios, laboratori
 - Consulta de disponibilidad por fecha.
 - Detalle publico de cada recurso con horarios ocupados.
 - Registro e inicio de sesion de usuarios.
-- Panel privado para consultar reservas propias.
+- Modulo privado 1: panel para consultar y cancelar reservas propias.
+- Modulo privado 2: agenda interna para revisar la ocupacion activa de todos los recursos.
 - Creacion de reservas solo para usuarios autenticados.
 - Cancelacion de reservas propias.
 - Validacion de cruces de horario para evitar dobles reservas.
@@ -21,7 +22,28 @@ Sistema de reservas tipo catalogo para consultar salones, auditorios, laboratori
 2. Revisa salones o equipos disponibles.
 3. Si quiere reservar, el sistema lo envia a iniciar sesion o crear cuenta.
 4. El usuario crea la reserva.
-5. Desde `Mi panel`, consulta o cancela sus reservas.
+5. Desde `Privado 1: reservas`, consulta o cancela sus reservas.
+6. Desde `Privado 2: agenda`, consulta la ocupacion interna por fecha.
+
+## Modulos del proyecto
+
+`Modulo publico`
+
+- Ruta principal: `/myapp/`
+- Permite ver recursos activos y disponibilidad por fecha.
+- No requiere iniciar sesion.
+
+`Modulo privado 1: reservas`
+
+- Ruta principal: `/myapp/panel/`
+- Permite crear, consultar y cancelar reservas propias.
+- Requiere usuario autenticado.
+
+`Modulo privado 2: agenda`
+
+- Ruta principal: `/myapp/agenda/`
+- Permite consultar la agenda interna de todos los recursos por fecha.
+- Requiere usuario autenticado.
 
 ## Estructura principal
 
